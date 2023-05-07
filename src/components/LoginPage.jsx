@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useContext, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { UserContext } from "../UserContext";
+import { UserContext } from "../userContext";
 
 export default function LoginPage(params) {
     const [email,setEmail] = useState();
@@ -18,12 +18,13 @@ export default function LoginPage(params) {
             setRedicted(true)
         } catch (error) {
             alert('login fail')
+            
         }
          
         
     }
     if (redirected){
-        return <Navigate to={'/'}></Navigate>
+        return <Navigate to={'/account'}></Navigate>
     }
 
     return (
