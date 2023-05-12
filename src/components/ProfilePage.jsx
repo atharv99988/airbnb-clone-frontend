@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 import { UserContext } from '../userContext';
-import { Navigate, Link, useParams } from 'react-router-dom';
+import { Navigate,  useParams } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 import AccountNav from './AccountNav';
-import { PlacesPage } from './PlacesPage';
+
 
 
 export default function ProfilePage() {
