@@ -1,119 +1,67 @@
-import { Link, Navigate, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import PlacesFormPage from './PlacesFormPage';
+import AccountNav from './AccountNav';
 import axios from 'axios';
-import PhotoUpload from './PhotoUploader';
-import Perks from './Perks';
+import { useEffect, useState } from 'react';
 
 export function PlacesPage() {
   const { action } = useParams();
-  const { id } = useParams();
-  const [title, setTitle] = useState('');
-  const [address, setAddress] = useState('');
-  const [description, setDescription] = useState('');
-  const [perks, setPerks] = useState([]);
-  const [checkIn, setCheckIn] = useState('');
-  const [checkOut, setCheckOut] = useState('');
-  const [maxGuest, setMaxGuests] = useState(1);
-  const [extrainfo,setextrainfo] = useState('')
-  const [price, setPrice] = useState(100);
-  const [photos, setAddedPhotos] = useState([]);
-  const [redirect,setredirect] = useState('')
+  const [place, setPlace] = useState([]);
 
+  useEffect(() => {
+    getPlaces();
+  }, []);
 
-
-  function inputHeader(text) {
-    return <h2 className="text-2xl mt-4">{text}</h2>;
+  function getPlaces() {
+    axios
+      .get('/user-place')
+      .then(({ data }) => {
+        console.log(data);
+        setPlace(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('some error occured ');
+      });
   }
-
-  function inputDescription(text) {
-    return <p className="text-gray-500 text-sm">{text}</p>;
-  }
-
-  function preInput(header, description) {
-    return (
-      <>
-        {inputHeader(header)}
-        {inputDescription(description)}
-      </>
-    );
-  }
-
-
-  function addNewPlace(ev){
-    ev.preventDefault()
-    // const {title , address , photos , description , perks , extrainfo , checkIn , checkOut , maxGuest}
-    const data = {id , title ,address,description,perks,checkIn,checkOut,maxGuest,photos,extrainfo}
-    console.log(data);
-    axios.post('/place',data).then(succ => {
-      alert('place added successfully')
-      setredirect('/place')
-    }).catch(err => {
-      alert('some unwanted error occured')
-    })
-  }
-
-  if (redirect){
-    <Navigate to={redirect} />
-  }
-  
 
   return (
     <div>
-      {action !== 'new' && (
-        <div className="text-center">
-          <Link className="inline-flex gap-1 bg-primary text-white py-2 px-4 rounded-full" to={'/account/place/new'}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Add new places
-          </Link>
-        </div>
-      )}
-
-      {action === 'new' && (
-        <div className="m-4">
-          <form action="" onSubmit={addNewPlace}>
-            {preInput('Title', 'Title for your page, should be short and catchy.')}
-            <input type="text" value={title} onChange={ev => {setTitle(ev.target.value)}} name="" id="" placeholder="title,for example: My sweet home" />
-
-            {preInput('Address', 'Address to this page.')}
-            <input type="text" value={address} onChange={ev => {setAddress(ev.target.value)}} placeholder="address"></input>
-
-            {preInput('Photos', 'More = better')}
-            <PhotoUpload addedPhotos = {photos} setAddedPhotos = {setAddedPhotos}/>
-
-            {preInput('Description', 'Description of this page.')}
-            <textarea name="" id="" cols="30" rows="10" onChange={ev => {setDescription(ev.target.value)}}/>
-
-            {preInput('Extra Information', 'Description of this area.')}
-            <textarea name="" id="" cols="30" rows="10" onChange={ev => {setextrainfo(ev.target.value)}}/>
-
-            {preInput('Perks', 'Select all the perks .')}
-            <Perks selected={perks} onChange={setPerks} />
-            
-
-            <h2 className="text-xl mt-4">Check-In and Check-Out</h2>
-            <p className="text-gray-500 text-sm">add in check in and check out time .Remember to have time for cleaning </p>
-            <div className="grid gap-2 sm:grid-col-3">
-              <div>
-                <h2 className="mt-2 -mb-1">Check in Time</h2>
-                <input type="text" placeholder="14:00" onChange={ev => setCheckIn(ev.target.value)}/>
-              </div>
-
-              <div>
-                <h2 className="mt-2 -mb-1">Check Out Time</h2>
-                <input type="text" onChange={ev => setCheckOut(ev.target.value)}/>
-              </div>
-
-              <div>
-                <h2 className="mt-2 -mb-1">Max Guest</h2>
-                <input type="text" onChange={ev => setMaxGuests(ev.target.value)}/>
-              </div>
+      <AccountNav />
+      <div>
+        {action !== 'new' && (
+          <>
+            <div className="text-center">
+              <Link className="inline-flex gap-1 bg-primary text-white py-2 px-4 rounded-full" to={'/account/place/new'}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Add new places
+              </Link>
             </div>
-            <button className="primary">Save</button>
-          </form>
-        </div>
-      )}
+
+            <div>
+              {place.length > 0 &&
+                place.map((place) => {
+                  return (
+                    <>
+                    <Link to={'/account/place/' + place._id}>
+                    <div className=" flex bg-gray-100 p-4 m-4 gap-4 rounded-2xl">
+                      <div className="w-32 h-32 bg-gray-200 shrink-0 ">{place.photos.length > 0 && <img className = 'h-32 w-32' src= {'http://localhost:5000/upload/'+ place.photos[0] } alt="" />  }</div>
+                      <div>
+                        <h2 className="text-xl grow-0">{place.title}</h2>
+                        <p>{place.description}</p>
+                      </div>
+                    </div>
+                    </Link>
+                    </>
+                  );
+                })}
+            </div>
+          </>
+        )}
+        {action === 'new' && <PlacesFormPage />}
+      </div>
     </div>
   );
 }

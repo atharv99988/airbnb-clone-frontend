@@ -5,9 +5,9 @@ import { useContext } from 'react';
 export default function Header(params) {
   const { user } = useContext(UserContext);
   return (
-    <header className="p-4 flex items-center justify-between">
+    <header className=" -m-3 p-4 flex items-center justify-between shadow-md shadow-gray-300">
       {/* this is code for logo and name   */}
-      <a href="akfnkan" className="flex items-center gap-1">
+      <a href="/" className="flex items-center gap-1">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8  -rotate-90">
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
         </svg>
@@ -15,12 +15,12 @@ export default function Header(params) {
       </a>
 
       {/* code for middle stuff of airbnb website */}
-      <div className="flex border border-gray-300 rounded-full py-2 px-4 gap-2 shadow-md shadow-gray-300">
-        <div>Any where</div>
+      <div className="flex border border-gray-300 rounded-full py-2 px-4 gap-2 shadow-md shadow-gray-300 ">
+        <div className='m-1'>Any where</div>
         <div className="border-l border-gray-300"></div>
-        <div>Any Week</div>
+        <div className='m-1'>Any Week</div>
         <div className="border-l border-gray-300"></div>
-        <div>Add Guest</div>
+        <div className='m-1'>Add Guest</div>
         <div className="border-l border-gray-300"></div>
         <button className="bg-primary text-white p-2 rounded-full">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
